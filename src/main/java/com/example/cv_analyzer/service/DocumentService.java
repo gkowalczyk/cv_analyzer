@@ -4,14 +4,13 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.core.io.UrlResource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.function.Function;
 
-@RestController
+@Service
 public class DocumentService implements Function<DocumentService.Request, List<Document>> {
 
     @Override
@@ -23,7 +22,6 @@ public class DocumentService implements Function<DocumentService.Request, List<D
         }
     }
 
-    @GetMapping("/cv")
     public List<Document> getMyCv() throws MalformedURLException {
 
         TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(new UrlResource(""));
@@ -33,5 +31,6 @@ public class DocumentService implements Function<DocumentService.Request, List<D
     }
 
     public record Request(String location) {
+
     }
 }
