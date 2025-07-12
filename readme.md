@@ -7,19 +7,19 @@
 ## **Features**
 
 - 🚀 **PDF CV Analysis**:
-  - Extracts skills, experience, education, and other data by analyzing the content of your CV.
+    - Extracts skills, experience, education, and other data by analyzing the content of your CV.
 
 - 🤖 **OpenAI API Integration**:
-  - Utilizes AI models to interpret the CV content and extract key information.
+    - Utilizes AI models to interpret the CV content and extract key information.
 
 - 🌐 **Integration with Just Join IT**:
-  - Fetches job offers that match your professional profile.
+    - Fetches job offers that match your professional profile.
 
 - 🔍 **Job Offer Ranking**:
-  - Sorts and evaluates job offers based on compatibility with your skills and experience.
+    - Sorts and evaluates job offers based on compatibility with your skills and experience.
 
 - 📄 **Report Generation**:
-  - Creates a summary of matched job offers in PDF format.
+    - Creates a summary of matched job offers in PDF format.
 
 ---
 
@@ -39,3 +39,4 @@
    ```bash
    git clone https://github.com/yourusername/cv-analyzer.git
    cd cv-analyzer
+

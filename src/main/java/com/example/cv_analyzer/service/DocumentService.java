@@ -24,13 +24,12 @@ public class DocumentService implements Function<DocumentService.Request, List<D
 
     public List<Document> getMyCv() throws MalformedURLException {
 
-        TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(new UrlResource(""));
+        TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(new UrlResource("https://bykowski.pl/cv.pdf"));
         TokenTextSplitter tokenTextSplitter = new TokenTextSplitter();
         List<Document> documents = tokenTextSplitter.apply(tikaDocumentReader.get());
         return documents;
     }
 
     public record Request(String location) {
-
     }
 }
