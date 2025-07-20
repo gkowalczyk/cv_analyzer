@@ -1,6 +1,6 @@
 package com.example.cv_analyzer.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -9,18 +9,14 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
-import java.util.Set;
+
 
 @RestController
+@RequiredArgsConstructor
 public class ChatController {
 
     private final ChatModel chatModel;
-
-    public ChatController(ChatModel chatModel) {
-        this.chatModel = chatModel;
-    }
 
     @GetMapping("/chat")
     public String chat(@RequestParam(value = "message") String message) {
@@ -30,8 +26,9 @@ public class ChatController {
                 OpenAiChatOptions
                         .builder()
                         .withFunction("getMyCv")
-                        .withFunction("getJobsOffers")
+                        .withFunction("getOffersAdapter")
                         .build()));
+
         return response.getResult().getOutput().getContent();
     }
 }

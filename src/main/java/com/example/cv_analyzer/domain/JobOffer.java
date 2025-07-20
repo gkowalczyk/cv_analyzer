@@ -1,29 +1,23 @@
 package com.example.cv_analyzer.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
 import lombok.Data;
-
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@Builder
 public class JobOffer {
     private String companyName;
+    private String offerName;
     private double salaryFromPln;
     private double salaryToPln;
+    public String salaryRaw;
     private List<String> requiredSkills;
-    private List<String>  niceToHaveSkills;
+    private List<String> niceToHaveSkills;
     private String workplaceType;
     private String experienceLevel;
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @Data
-    public static class Location {
-        private String city;
-        private String street;
-        private double latitude;
-        private double longitude;
-    }
+    private String location;
+    private String link;
 }
 
 
