@@ -7,7 +7,6 @@ public class Web<T>  {
 
     protected JobOfferExtractor<T> jobOfferExtractor;
 
-
     public Web(JobOfferExtractor<T> jobOfferExtractor) {
         this.jobOfferExtractor = jobOfferExtractor;
     }
