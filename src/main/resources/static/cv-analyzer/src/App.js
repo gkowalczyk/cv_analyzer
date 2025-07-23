@@ -16,7 +16,7 @@ const App = () => {
                 params.append('cvUrl', cvUrl);
             }
 
-            const response = await fetch(`http://localhost:8081/chat?${params.toString()}`);
+            const response = await fetch(`https://cv-job-analyzer.gkowalczyk-dev-app.site/chat?${params.toString()}`);
             const data = await response.text();
             setResult(data);
         } catch (error) {
