@@ -19,7 +19,7 @@ import java.util.List;
 public class ChatController {
 
     private final ChatModel chatModel;
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @GetMapping("/chat")
     public ResponseEntity<String> chat(@RequestParam(value = "message") String message) {
         UserMessage userMessage = new UserMessage(message);
