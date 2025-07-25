@@ -83,31 +83,32 @@ public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
         log.info("Starting auto-scroll to load job offers...");
 
         while (retries < 10) {
-            js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+            js.executeScript("window.scrollBy(0, 1000);");
 
             try {
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-                int finalPreviousSize = previousSize;
-                log.debug("Scroll iteration {}: offers increased from {} ", retries + 1, finalPreviousSize);
-                wait.until(d -> d.findElements(offerSelector).size() > finalPreviousSize);
-            } catch (TimeoutException ignored) {
-                log.warn("Timeout: no new offers loaded during scroll iteration {}. Ending scrolling.", retries + 1);
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 break;
             }
 
             int currentSize = driver.findElements(offerSelector).size();
+            log.debug("Scroll iteration {}: offers increased from {} to {}", retries + 1, previousSize, currentSize);
+
             if (currentSize <= previousSize) {
-                log.info(" All job offers loaded (total: {}).", currentSize);
+                log.info("All job offers loaded (total: {}).", currentSize);
                 break;
             }
+
             previousSize = currentSize;
             retries++;
         }
 
         List<WebElement> result = driver.findElements(offerSelector);
-        log.info(" Total job offers found: {}", result.size());
+        log.info("Total job offers found: {}", result.size());
         return result;
     }
+
 
     private String buildUrl(String level, String position, String location) {
         return UriComponentsBuilder.newInstance()
