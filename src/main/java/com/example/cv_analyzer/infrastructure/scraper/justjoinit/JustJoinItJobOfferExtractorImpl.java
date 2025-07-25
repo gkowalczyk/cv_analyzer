@@ -7,6 +7,7 @@ import com.example.cv_analyzer.domain.JobOfferExtractor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -76,17 +77,18 @@ public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
         }
     }
 
-    private List<WebElement> scrollUntilAllOffersLoaded(WebDriver driver, By offerSelector) {
+    private List<WebElement> scrollUntilAllOffersLoaded(WebDriver driver, By offerSelector) throws InterruptedException {
         JavascriptExecutor js = (JavascriptExecutor) driver;
+
         int previousSize = 0;
         int retries = 0;
         log.info("Starting auto-scroll to load job offers...");
 
-        while (retries < 10) {
+        while (retries < 50) {
             js.executeScript("window.scrollBy(0, 1000);");
 
             try {
-                Thread.sleep(1500);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
