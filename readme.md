@@ -7,6 +7,10 @@ I am planning future integrations with other popular job portals such as **No Fl
 
 ---
 
+### 🔗 **Live Demo**
+
+Try the live version here: [cv-analyzer-demo.gkowalczyk-dev-app.site](https://cv-analyzer-demo.gkowalczyk-dev-app.site)
+
 ## **Features**
 
 - 🚀 **PDF CV Analysis**  
