@@ -84,7 +84,7 @@ public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
         int retries = 0;
         log.info("Starting auto-scroll to load job offers...");
 
-        while (retries < 50) {
+        while (retries < 100) {
             js.executeScript("window.scrollBy(0, 1000);");
 
             try {
