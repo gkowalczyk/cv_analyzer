@@ -7,11 +7,7 @@ import com.example.cv_analyzer.domain.JobOfferExtractor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
