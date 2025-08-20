@@ -1,44 +1,39 @@
 package com.example.cv_analyzer.controller;
 
+import com.example.cv_analyzer.domain.JobOffer;
+import com.example.cv_analyzer.service.ChatService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.openai.OpenAiChatOptions;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ChatController {
 
-    private final ChatModel chatModel;
+    private final ChatService chatService;
 
-    @CrossOrigin(origins = "*")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping("/chat")
-    public ResponseEntity<String> chat(@RequestParam(value = "message") String message) {
+    public ResponseEntity<String> chat(@RequestParam(value = "message") String message, HttpSession httpSession) {
         try {
-            UserMessage userMessage = new UserMessage(message);
-
-            ChatResponse response = chatModel.call(new Prompt(List.of(userMessage),
-                    OpenAiChatOptions
-                            .builder()
-                            .withFunction("getMyCv")
-                            .withFunction("getOffersAdapter")
-                            .build()));
-            return ResponseEntity.ok(response.getResult().getOutput().getContent());
+            String result = chatService.chat(message);
+            httpSession.setAttribute("chatResponse", result);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error" + e.getMessage());
         }
+    }
+
+    @PostMapping("/chat/save")
+    public ResponseEntity<List<JobOffer>> saveToDb(HttpSession session) {
+        String result = (String) session.getAttribute("chatResponse");
+        return ResponseEntity.ok(chatService.saveDataToDb(result));
     }
 }

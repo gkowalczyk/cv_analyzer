@@ -1,25 +1,28 @@
 package com.example.cv_analyzer.domain;
 
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 import java.util.List;
 
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @Builder
+@Entity
+@NoArgsConstructor
 public class JobOffer {
-    private String companyName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String offerName;
-    private double salaryFromPln;
-    private double salaryToPln;
-    public String salaryRaw;
-    private List<String> requiredSkills;
-    private List<String> niceToHaveSkills;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "company_id")
+    private Company company;
     private String workplaceType;
-    private String experienceLevel;
-    private String location;
+    private String salaryRaw;
     private String link;
-}
-
-
-
+    @ElementCollection
+    private List<String> requiredSkills;
+    }
 

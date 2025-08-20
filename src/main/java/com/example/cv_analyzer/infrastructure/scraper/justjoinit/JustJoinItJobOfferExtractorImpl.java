@@ -1,9 +1,7 @@
 package com.example.cv_analyzer.infrastructure.scraper.justjoinit;
 
-import com.example.cv_analyzer.domain.JobOffer;
-import com.example.cv_analyzer.domain.JustJoinItWebStrategy;
+import com.example.cv_analyzer.domain.*;
 import com.example.cv_analyzer.exception.JobOfferScrapingException;
-import com.example.cv_analyzer.domain.JobOfferExtractor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
@@ -16,14 +14,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
-        implements JobOfferExtractor<T>, Function<JustJoinItWebStrategy.Request, List<JobOffer>> {
+        implements JobOfferExtractor<T>, Function<JustJoinItWebStrategy.Request, List<JobOfferDTO>> {
 
     private final WebScraperEngine webScraperEngine;
     private final Validator validator;
     private final WebDriverProvider webDriverProvider;
 
     @Override
-    public JobOffer extract(T offer) {
+    public JobOfferDTO extract(T offer) {
         String title = webScraperEngine.extractTitle(offer);
         String company = webScraperEngine.extractCompany(offer);
         String city = webScraperEngine.extractCity(offer);
@@ -31,9 +29,13 @@ public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
         String salaryRaw = webScraperEngine.extractSalary(offer);
         String link = webScraperEngine.extractLinkToOffer(offer);
 
-        return JobOffer.builder()
+        CompanyDTO companyObj = CompanyDTO.builder()
+                .company(company)
+                .build();
+
+        return JobOfferDTO.builder()
                 .offerName(title)
-                .companyName(company)
+                .company(companyObj)
                 .workplaceType(city)
                 .salaryRaw(salaryRaw)
                 .link(link)
@@ -42,7 +44,7 @@ public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
     }
 
     @Override
-    public List<JobOffer> apply(JustJoinItWebStrategy.Request request) {
+    public List<JobOfferDTO> apply(JustJoinItWebStrategy.Request request) {
         try {
             return getJobsJustJoinItOffers(request.level(), request.position(), request.city());
         } catch (InterruptedException e) {
@@ -53,7 +55,7 @@ public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
         }
     }
 
-    public List<JobOffer> getJobsJustJoinItOffers(String level, String position, String location) throws InterruptedException {
+    public List<JobOfferDTO> getJobsJustJoinItOffers(String level, String position, String location) throws InterruptedException {
         WebDriver webDriver = webDriverProvider.createWebDriver();
 
         try {
@@ -73,7 +75,7 @@ public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
         }
     }
 
-    private List<WebElement> scrollUntilAllOffersLoaded(WebDriver driver, By offerSelector) throws InterruptedException {
+    private List<WebElement> scrollUntilAllOffersLoaded(WebDriver driver, By offerSelector) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
         int previousSize = 0;
@@ -106,7 +108,6 @@ public class JustJoinItJobOfferExtractorImpl<T extends WebElement>
         log.info("Total job offers found: {}", result.size());
         return result;
     }
-
 
     private String buildUrl(String level, String position, String location) {
         return UriComponentsBuilder.newInstance()

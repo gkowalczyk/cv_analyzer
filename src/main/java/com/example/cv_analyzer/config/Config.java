@@ -1,6 +1,6 @@
 package com.example.cv_analyzer.config;
 
-import com.example.cv_analyzer.domain.JobOffer;
+import com.example.cv_analyzer.domain.JobOfferDTO;
 import com.example.cv_analyzer.domain.JustJoinItWebStrategy;
 import com.example.cv_analyzer.domain.Web;
 import com.example.cv_analyzer.infrastructure.scraper.justjoinit.JustJoinItJobOfferExtractorImpl;
@@ -13,13 +13,14 @@ import org.springframework.ai.document.Document;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
-
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 @Configuration
-public class Config {
+public class Config implements WebMvcConfigurer {
 
     @Bean
     @Description("Pobierz moje CV")
@@ -29,7 +30,7 @@ public class Config {
 
     @Bean
     @Description("Pobierz oferty pracy z https://justjoin.it")
-    public Function<JustJoinItWebStrategy.Request, List<JobOffer>> getJobsJustJoinItOffers(JustJoinItJobOfferExtractorImpl<WebElement> extractorImpl) {
+    public Function<JustJoinItWebStrategy.Request, List<JobOfferDTO>> getJobsJustJoinItOffers(JustJoinItJobOfferExtractorImpl<WebElement> extractorImpl) {
         return extractorImpl;
     }
 
@@ -43,10 +44,10 @@ public class Config {
 
     @Bean
     @Description("Pobierz oferty pracy ze wszystkich serwisów")
-    public Function<Web.Request, List<JobOffer>> getOffersAdapter(
+    public Function<Web.Request, List<JobOfferDTO>> getOffersAdapter(
             JustJoinItJobOfferExtractorImpl<WebElement> justJoinItExtractor) {
         return request -> {
-            List<JobOffer> all;
+            List<JobOfferDTO> all;
             try {
                 all = new ArrayList<>(justJoinItExtractor.getJobsJustJoinItOffers(request.level(), request.position(), request.city()));
             } catch (InterruptedException e) {
@@ -55,5 +56,18 @@ public class Config {
             }
             return all;
         };
+    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns(
+                        "http://localhost:3000",
+                        "https://cv-job-analyzer.netlify.app",
+                        "https://*.netlify.app"
+                )
+                .allowedMethods("GET","POST","OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }
