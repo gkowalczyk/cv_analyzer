@@ -18,7 +18,6 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping("/chat")
     public ResponseEntity<String> chat(@RequestParam(value = "message") String message, HttpSession httpSession) {
         try {
